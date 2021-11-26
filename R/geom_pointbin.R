@@ -2,8 +2,7 @@ StatPointBin = ggproto("StatPointBin", Stat,
   required_aes = c("x", "y"),
   default_aes = aes(color = stat(dens)),
 
-  compute_group = function(data, scales) {
-    nbin = 64
+  compute_group = function(data, scales, params, nbin = 64) {
     if(length(nbin) == 1) {
       nbin = rep(nbin, 2)
     }
@@ -25,12 +24,14 @@ StatPointBin = ggproto("StatPointBin", Stat,
 geom_pointbin = function(
   mapping = NULL, data = NULL, 
   stat = "pointbin", position = "identity",
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, ...)
+  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, 
+  nbin = 64, ...)
 {
   layer(stat = StatPointBin,
     data = data, mapping = mapping,
     geom = GeomPoint,
     position = position,
-    show.legend = show.legend, inherit.aes = inherit.aes
+    show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(nbin = nbin, na.rm = na.rm, ...)
   )
 }

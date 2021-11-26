@@ -13,7 +13,6 @@ library(ggpointdensity)
 library(ggplot2)
 library(dplyr)
 library(viridis)
-#> Loading required package: viridisLite
 
 library(cowplot)
 theme_set(theme_cowplot(12))
@@ -41,10 +40,15 @@ p_bin = p_base +
   geom_pointbin() +
   scale_color_viridis()
 
+p_bin2 = p_base + 
+  geom_pointbin(nbin = 16) +
+  scale_color_viridis()
+
 plot_grid(
   p_nn + labs(subtitle = 'geom_pointdensity(method = "default")'),
-  p_kde + labs(subtitle = 'geom_pointdensity(method = "kde2d"'),
-  p_bin + labs(subtitle = 'geom_pointbin()'))
+  p_kde + labs(subtitle = 'geom_pointdensity(method = "kde2d")'),
+  p_bin + labs(subtitle = 'geom_pointbin()'),
+  p_bin2 + labs(subtitle = 'geom_pointbin(nbin = 16)'))
 ```
 
 <img src="img/README-pointbin-plot_pointdensity_vs_pointbin-1.png" width="100%" />
