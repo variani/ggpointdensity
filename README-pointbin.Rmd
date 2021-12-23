@@ -14,11 +14,17 @@ knitr::opts_chunk$set(
 
 # Geom `geom_pointbin`
 
-The geom `geom_pointdensity` from 
-the [ggpointdensity](https://github.com/variani/ggpointdensity) package
-implements two methods for 2D density estimation, 
+The R package [ggpointdensity](https://github.com/variani/ggpointdensity) 
+implements two methods for 2D density estimation for the `geom_pointdensity` geom, 
 nearest neighbors (`method="default"`) and 
-`kde2d` (`method="kde2d"`) from the MASS package.
+a kernel density approach `kde2d` (`method="kde2d"`) from the MASS package.
+These two methods can be rather slow when datasets  are large (>100,000 observations)
+and/or the disribution is not Gaussian.
+
+A new geom `geom_pointbin` is based on the average shifted histogram 
+implemented in the R package [ash](https://cran.r-project.org/web/packages/ash/)
+and found to be both accurate and computationally efficient
+[(Deng and Wickham, 2011)](https://vita.had.co.nz/papers/density-estimation.pdf).
 
 ```{r inc}
 library(ggpointdensity)
@@ -30,6 +36,8 @@ library(viridis)
 library(cowplot)
 theme_set(theme_cowplot(12))
 ```
+
+## `geom_pointbin` accuracy
 
 ```{r sim_data}
 N = 1e3
@@ -64,5 +72,49 @@ plot_grid(
   p_bin2 + labs(subtitle = 'geom_pointbin(nbin = 16)'))
 ```
 
+## Support of ggplot2 features
 
+```{r facet}
+p_bin + facet_wrap( ~ group)
+```
 
+```{r xlim}
+p_bin + xlim(c(-3, 0))
+
+## `geom_pointbin` computational efficiency
+
+```{r data_diamonds}
+data(diamonds, package = "ggplot2")
+```
+
+```{r plot_diamonds}
+p_diamonds_base = ggplot(diamonds, aes(x = carat, y = price))
+p_diamonds_bin = p_diamonds_base + 
+  geom_pointbin() + scale_color_viridis()
+ggplot2::benchplot(p_diamonds_bin)
+```
+
+```{r plot_diamonds_kde}
+p_diamonds_kde = p_diamonds_base +
+  geom_pointdensity(method = "kde2d") + scale_color_viridis()
+ggplot2::benchplot(p_diamonds_kde)
+```
+
+```{r plot_diamonds_nn}
+p_diamonds_nn = p_diamonds_base +
+  geom_pointdensity(method = "default") + scale_color_viridis()
+ggplot2::benchplot(p_diamonds_nn)
+```
+
+```{r plot_diamonds_bin2}
+# default nbin = 64
+p_diamonds_nbin64 = p_diamonds_base + 
+  geom_pointbin() + scale_color_viridis()
+p_diamonds_nbin128 = p_diamonds_base + 
+  geom_pointbin(nbin = 128) + scale_color_viridis()
+
+plot_grid(
+  p_diamonds_nbin64, 
+  p_diamonds_nbin128,
+  ncol = 1)
+```
