@@ -84,14 +84,15 @@ StatPointdensity <- ggproto("StatPointdensity", Stat,
                               if (identical(params$method, "auto")) {
                                 # Use default nn correction for small datasets, kde2d for
                                 # larger. Based on size of the _largest_ group.
-                                max_group <- max(table(interaction(data$group, data$PANEL, drop = TRUE)))
-                                if (max_group > 20000) {
-                                  message(paste0("geom_pointdensity using method='kde2d' ",
-                                                 "due to large number of points (>20k)"))
-                                  params$method <- "kde2d"
-                                } else {
-                                  params$method <- "default"
-                                }
+                                # max_group <- max(table(interaction(data$group, data$PANEL, drop = TRUE)))
+                                # if (max_group > 20000) {
+                                #   message(paste0("geom_pointdensity using method='kde2d' ",
+                                #                  "due to large number of points (>20k)"))
+                                #   params$method <- "kde2d"
+                                # } else {
+                                #   params$method <- "default"
+                                # }
+                                params$method <- "bkde2d"
                               }
 
                               params
@@ -116,7 +117,6 @@ StatPointdensity <- ggproto("StatPointdensity", Stat,
                                 data$density <- count_neighbors(
                                   data$x, data$y, r2 = r2, xy = xy)
 
-
                               } else if (identical(method, "kde2d")) {
 
                                 finites <- is.finite(data$x) & is.finite(data$y)
@@ -139,6 +139,33 @@ StatPointdensity <- ggproto("StatPointdensity", Stat,
                                 iy <- findInterval(data$y, dens$y)
                                 ii <- cbind(ix, iy)
                                 data$density[finites] <- dens$z[ii]
+                                data$density[!finites] <- min(dens$z)
+
+                              } else if (identical(method, "bkde2d")) {
+
+                                finites <- is.finite(data$x) & is.finite(data$y)
+                                ddata <- data[finites,]
+                                base.args <- list(
+                                  x = ddata$x,
+                                  y = ddata$y,
+                                  lims = c(scales$x$dimension(), scales$y$dimension()))
+                                if (!is.element("n", names(method.args))) {
+                                  method.args["n"] <- 100
+                                }
+                                if (!is.element("h", names(method.args))) {
+                                  h <- c(MASS::bandwidth.nrd(ddata$x), MASS::bandwidth.nrd(ddata$y))
+                                  method.args$h <- h * adjust
+                                }
+                                if(length(h) == 1) { 
+                                  h = rep(h, 2)
+                                }
+
+                                dens = do.call(KernSmooth::bkde2D(cbind(base.args$x, base.args$y), method.args))
+                                # credits to Kamil Slowikowski:
+                                ix <- findInterval(data$x, dens$x1)
+                                iy <- findInterval(data$y, dens$x2)
+                                ii <- cbind(ix, iy)
+                                data$density[finites] <- dens$fhat[ii]
                                 data$density[!finites] <- min(dens$z)
                               } else {
 

@@ -80,6 +80,7 @@ p_bin + facet_wrap( ~ group)
 
 ```{r xlim}
 p_bin + xlim(c(-3, 0))
+```
 
 ## `geom_pointbin` computational efficiency
 
@@ -118,3 +119,27 @@ plot_grid(
   p_diamonds_nbin128,
   ncol = 1)
 ```
+
+## `geom_pointbin` sub-sampling within bins
+
+```{r nsample_bin}
+# 100 samples per bin
+p_bin_samp100 = p_base + 
+  geom_pointbin(nsamples = 100) +
+  scale_color_viridis()
+
+# 5 samples per bin
+p_bin_samp5 = p_base + 
+  geom_pointbin(nsamples = 5) +
+  scale_color_viridis()
+
+# 1 sample per bin
+p_bin_samp1 = p_base + 
+  geom_pointbin(nsamples = 1) +
+  scale_color_viridis()
+
+plot_grid(
+  p_bin, p_bin_samp100,
+  p_bin_samp5, p_bin_samp1)
+```
+
