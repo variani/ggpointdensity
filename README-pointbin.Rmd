@@ -123,23 +123,31 @@ plot_grid(
 ## `geom_pointbin` sub-sampling within bins
 
 ```{r nsample_bin}
+# 0 samples per bin
+p_bin_samp0 = p_base + 
+  geom_pointbin(nbin = 16, nsamples = 0) +
+  scale_color_viridis()
+
 # 100 samples per bin
 p_bin_samp100 = p_base + 
-  geom_pointbin(nbin = 4, nsamples = 100) +
+  geom_pointbin(nbin = 16, nsamples = 100) +
   scale_color_viridis()
 
 # 5 samples per bin
 p_bin_samp5 = p_base + 
-  geom_pointbin(nbin = 4,nsamples = 5) +
+  geom_pointbin(nbin = 16, nsamples = 5) +
   scale_color_viridis()
 
 # 1 sample per bin
 p_bin_samp1 = p_base + 
-  geom_pointbin(nbin = 4,nsamples = 1) +
+  geom_pointbin(nbin = 16, nsamples = 1) +
   scale_color_viridis()
 
 plot_grid(
-  p_bin, p_bin_samp100,
-  p_bin_samp5, p_bin_samp1)
+  p_bin + labs(subtitle = "nbin = 16, nsamples = 0 (no sampling)"),
+  p_bin_samp100 + labs(subtitle = "nbin = 16, nsamples = 100 (representative sampling)"),
+  p_bin_samp5 + labs(subtitle = "nbin = 16, nsamples = 5 (very few samples per bin)"),
+  p_bin_samp1 + labs(subtitle = "nbin = 16, nsamples = 1 (only one sample per bin)"),
+  ncol = 2)
 ```
 

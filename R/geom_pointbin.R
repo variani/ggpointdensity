@@ -27,8 +27,11 @@ StatPointBin = ggproto("StatPointBin", Stat,
             if(nrow(split) > nsamples) {
                 split = mutate(split, row = seq(n()))
                 sel = sample(split$row, nsamples, replace = FALSE)
+                # v1
                 split = split[sel, ]
-                split = select(split, -row)
+                # v2
+                # split = mutate(split, dens = ifelse(row %in% sel, dens, NA))
+                # split = select(split, -row)
             } 
             split
         }) %>%
