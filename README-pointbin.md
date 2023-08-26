@@ -59,7 +59,6 @@ plot_grid(
   p_kde + labs(subtitle = 'geom_pointdensity(method = "kde2d")'),
   p_bin + labs(subtitle = 'geom_pointbin()'),
   p_bin2 + labs(subtitle = 'geom_pointbin(nbin = 16)'))
-#> Loading required package: ash
 ```
 
 <img src="img/README-pointbin-plot_pointdensity_vs_pointbin-1.png" width="100%" />
@@ -74,7 +73,7 @@ p_bin + facet_wrap( ~ group)
 
 ``` r
 p_bin + xlim(c(-3, 0))
-#> Warning: Removed 1506 rows containing non-finite values
+#> Warning: Removed 1474 rows containing non-finite values
 #> (`stat_point_bin()`).
 ```
 
@@ -97,10 +96,10 @@ ggplot2::benchplot(p_diamonds_bin)
 
     #>        step user.self sys.self elapsed
     #> 1 construct     0.000    0.000   0.000
-    #> 2     build     0.115    0.008   0.123
-    #> 3    render     0.058    0.000   0.062
-    #> 4      draw     0.862    0.000   0.865
-    #> 5     TOTAL     1.035    0.008   1.050
+    #> 2     build     0.107    0.004   0.110
+    #> 3    render     0.054    0.004   0.062
+    #> 4      draw     0.862    0.000   0.863
+    #> 5     TOTAL     1.023    0.008   1.035
 
 ``` r
 p_diamonds_kde = p_diamonds_base +
@@ -111,11 +110,11 @@ ggplot2::benchplot(p_diamonds_kde)
 <img src="img/README-pointbin-plot_diamonds_kde-1.png" width="100%" />
 
     #>        step user.self sys.self elapsed
-    #> 1 construct     0.000     0.00   0.000
-    #> 2     build     1.728     0.22   1.955
-    #> 3    render     0.058     0.00   0.062
-    #> 4      draw     0.864     0.00   0.863
-    #> 5     TOTAL     2.650     0.22   2.880
+    #> 1 construct     0.000    0.000   0.000
+    #> 2     build     1.571    0.188   1.783
+    #> 3    render     0.057    0.000   0.062
+    #> 4      draw     0.861    0.000   0.861
+    #> 5     TOTAL     2.489    0.188   2.706
 
 ``` r
 p_diamonds_nn = p_diamonds_base +
@@ -127,10 +126,10 @@ ggplot2::benchplot(p_diamonds_nn)
 
     #>        step user.self sys.self elapsed
     #> 1 construct     0.000    0.000   0.000
-    #> 2     build     8.613    0.023   8.645
-    #> 3    render     0.054    0.004   0.063
-    #> 4      draw     0.873    0.000   0.873
-    #> 5     TOTAL     9.540    0.027   9.581
+    #> 2     build     8.637    0.004   8.650
+    #> 3    render     0.058    0.000   0.062
+    #> 4      draw     0.866    0.000   0.868
+    #> 5     TOTAL     9.561    0.004   9.580
 
 ``` r
 # default nbin = 64
@@ -152,22 +151,27 @@ plot_grid(
 ``` r
 # 100 samples per bin
 p_bin_samp100 = p_base + 
-  geom_pointbin(nsamples = 100) +
+  geom_pointbin(nbin = 4, nsamples = 100) +
   scale_color_viridis()
 
 # 5 samples per bin
 p_bin_samp5 = p_base + 
-  geom_pointbin(nsamples = 5) +
+  geom_pointbin(nbin = 4,nsamples = 5) +
   scale_color_viridis()
 
 # 1 sample per bin
 p_bin_samp1 = p_base + 
-  geom_pointbin(nsamples = 1) +
+  geom_pointbin(nbin = 4,nsamples = 1) +
   scale_color_viridis()
 
 plot_grid(
   p_bin, p_bin_samp100,
   p_bin_samp5, p_bin_samp1)
+#> Warning: Computation failed in `stat_point_bin()`
+#> Computation failed in `stat_point_bin()`
+#> Computation failed in `stat_point_bin()`
+#> Caused by error in `$<-.data.frame`:
+#> ! replacement has 1996 rows, data has 2000
 ```
 
 <img src="img/README-pointbin-nsample_bin-1.png" width="100%" />

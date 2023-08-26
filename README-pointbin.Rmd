@@ -125,17 +125,17 @@ plot_grid(
 ```{r nsample_bin}
 # 100 samples per bin
 p_bin_samp100 = p_base + 
-  geom_pointbin(nsamples = 100) +
+  geom_pointbin(nbin = 4, nsamples = 100) +
   scale_color_viridis()
 
 # 5 samples per bin
 p_bin_samp5 = p_base + 
-  geom_pointbin(nsamples = 5) +
+  geom_pointbin(nbin = 4,nsamples = 5) +
   scale_color_viridis()
 
 # 1 sample per bin
 p_bin_samp1 = p_base + 
-  geom_pointbin(nsamples = 1) +
+  geom_pointbin(nbin = 4,nsamples = 1) +
   scale_color_viridis()
 
 plot_grid(
