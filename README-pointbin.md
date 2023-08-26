@@ -20,7 +20,16 @@ library(ggpointdensity)
 
 library(ggplot2)
 library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 library(viridis)
+#> Loading required package: viridisLite
 
 library(cowplot)
 theme_set(theme_cowplot(12))
@@ -59,6 +68,7 @@ plot_grid(
   p_kde + labs(subtitle = 'geom_pointdensity(method = "kde2d")'),
   p_bin + labs(subtitle = 'geom_pointbin()'),
   p_bin2 + labs(subtitle = 'geom_pointbin(nbin = 16)'))
+#> Loading required package: ash
 ```
 
 <img src="img/README-pointbin-plot_pointdensity_vs_pointbin-1.png" width="100%" />
@@ -73,7 +83,7 @@ p_bin + facet_wrap( ~ group)
 
 ``` r
 p_bin + xlim(c(-3, 0))
-#> Warning: Removed 1475 rows containing non-finite values
+#> Warning: Removed 1491 rows containing non-finite values
 #> (`stat_point_bin()`).
 ```
 
@@ -95,11 +105,11 @@ ggplot2::benchplot(p_diamonds_bin)
 <img src="img/README-pointbin-plot_diamonds-1.png" width="100%" />
 
     #>        step user.self sys.self elapsed
-    #> 1 construct     0.000        0   0.000
-    #> 2     build     0.098        0   0.098
-    #> 3    render     0.057        0   0.061
-    #> 4      draw     0.862        0   0.862
-    #> 5     TOTAL     1.017        0   1.021
+    #> 1 construct     0.000    0.000   0.000
+    #> 2     build     0.101    0.012   0.113
+    #> 3    render     0.057    0.000   0.061
+    #> 4      draw     0.867    0.000   0.875
+    #> 5     TOTAL     1.025    0.012   1.049
 
 ``` r
 p_diamonds_kde = p_diamonds_base +
@@ -111,10 +121,10 @@ ggplot2::benchplot(p_diamonds_kde)
 
     #>        step user.self sys.self elapsed
     #> 1 construct     0.000    0.000   0.000
-    #> 2     build     1.559    0.188   1.755
-    #> 3    render     0.058    0.000   0.062
-    #> 4      draw     0.857    0.000   0.858
-    #> 5     TOTAL     2.474    0.188   2.675
+    #> 2     build     1.411    0.243   1.662
+    #> 3    render     0.058    0.000   0.061
+    #> 4      draw     0.871    0.000   0.871
+    #> 5     TOTAL     2.340    0.243   2.594
 
 ``` r
 p_diamonds_nn = p_diamonds_base +
@@ -126,10 +136,10 @@ ggplot2::benchplot(p_diamonds_nn)
 
     #>        step user.self sys.self elapsed
     #> 1 construct     0.000    0.000   0.000
-    #> 2     build     8.601    0.004   8.609
-    #> 3    render     0.057    0.000   0.062
-    #> 4      draw     0.868    0.000   0.870
-    #> 5     TOTAL     9.526    0.004   9.541
+    #> 2     build     8.646    0.012   8.674
+    #> 3    render     0.058    0.000   0.063
+    #> 4      draw     0.859    0.000   0.860
+    #> 5     TOTAL     9.563    0.012   9.597
 
 ``` r
 # default nbin = 64
